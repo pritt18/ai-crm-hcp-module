@@ -1,70 +1,184 @@
-# Getting Started with Create React App
+# 🧠 AI-First CRM HCP Module – Log Interaction Screen
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 📌 Overview
 
-## Available Scripts
+This project is an **AI-powered CRM module** designed for Healthcare Professionals (HCP).
+It allows users to log interactions using a **conversational AI assistant** instead of manually filling forms.
 
-In the project directory, you can run:
+The system automatically extracts structured data (HCP name, sentiment, topics, etc.) from natural language input using **LLMs and LangGraph**.
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 🚀 Features
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+* 🤖 AI Chat-based interaction logging
+* 📋 Auto-fill form from natural language
+* ✏️ Edit interaction using chat (no manual form editing)
+* 🧠 LLM-based entity extraction & summarization
+* 🔄 Real-time UI update using Redux
+* ⚡ FastAPI backend with LangGraph agent
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🧰 Tech Stack
 
-### `npm run build`
+### Frontend
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+* React.js
+* Redux (State Management)
+* Axios
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Backend
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+* Python (FastAPI)
+* LangGraph (AI Agent Framework)
+* Groq LLM API
 
-### `npm run eject`
+### Database
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+* SQLite (or MySQL/Postgres ready)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 🧠 LangGraph AI Agent & Tools
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+The system uses a LangGraph agent to manage interactions.
 
-## Learn More
+### Implemented Tools:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+1. **Log Interaction**
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+   * Extracts HCP name, date, sentiment, topics, materials
+   * Auto-fills form using LLM output
 
-### Code Splitting
+2. **Edit Interaction**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+   * Updates specific fields using chat input
+   * Example: "Change sentiment to negative"
 
-### Analyzing the Bundle Size
+3. **Summarize Interaction**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+   * Converts conversation into structured summary
 
-### Making a Progressive Web App
+4. **Suggest Follow-up**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+   * Suggests next steps (meeting, reminder)
 
-### Advanced Configuration
+5. **Extract Entities**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+   * Detects medical topics, sentiment, HCP automatically
 
-### Deployment
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## 🖥️ System Architecture
 
-### `npm run build` fails to minify
+```
+User Input → React Chat UI → FastAPI Backend → LangGraph Agent → LLM (Groq)
+                                    ↓
+                              Structured JSON
+                                    ↓
+                              Redux Store Update
+                                    ↓
+                              Form Auto-Filled
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+---
+
+## ⚙️ Setup Instructions
+
+### 1️⃣ Clone Repository
+
+```
+git clone https://github.com/your-username/ai-crm-hcp-module.git
+cd ai-crm-hcp-module
+```
+
+---
+
+### 2️⃣ Backend Setup
+
+```
+cd backend
+python -m venv venv
+venv\Scripts\activate
+
+pip install fastapi uvicorn python-dotenv langchain langgraph
+
+uvicorn main:app --reload
+```
+
+---
+
+### 3️⃣ Frontend Setup
+
+```
+cd frontend
+npm install
+npm start
+```
+
+---
+
+## 🔐 Environment Variables
+
+Create a `.env` file inside backend:
+
+```
+GROQ_API_KEY=your_api_key_here
+```
+
+⚠️ Do NOT push `.env` file to GitHub
+
+---
+
+## 🧪 Example Prompts
+
+```
+Today I met Dr. Sharma and discussed insulin. Sentiment was positive and I shared brochures.
+```
+
+```
+Change sentiment to negative
+```
+
+```
+Met Dr. Patel, discussed diabetes treatment, follow up next week.
+```
+
+---
+
+## 🎥 Demo
+
+👉 Demonstrates:
+
+* AI filling form automatically
+* Editing via chat
+* Real-time updates
+
+---
+
+## 📌 Key Learnings
+
+* AI-first UI design
+* LangGraph agent architecture
+* LLM-based structured data extraction
+* Full-stack integration (React + FastAPI)
+
+---
+
+## 📎 Submission Details
+
+* GitHub Repository: ✔
+* Video Recording: ✔
+* LangGraph Tools: ✔
+
+---
+
+## 👨‍💻 Author
+
+**Pritam Gangurde**
+
+* LinkedIn: https://www.linkedin.com/in/pritam-gangurde-b51528249
+* GitHub: https://github.com/pritt18
+
+---
