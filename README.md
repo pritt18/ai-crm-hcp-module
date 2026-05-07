@@ -164,11 +164,14 @@ CRM Form Auto-Filled
 
 ## CRM Interaction Screen
 
-(Add Screenshot Here)
+<img width="1365" height="681" alt="image" src="https://github.com/user-attachments/assets/191bd1cc-a57f-4b51-90ef-8003d865603d" />
+
 
 ## AI Assistant Chat
 
-(Add Screenshot Here)
+<img width="1365" height="679" alt="image" src="https://github.com/user-attachments/assets/1c366d32-244b-46d8-b9be-4bb28f065802" />
+
+<img width="1363" height="669" alt="image" src="https://github.com/user-attachments/assets/d1cbaa9a-11c5-49c8-9766-7c131985245d" />
 
 ---
 
