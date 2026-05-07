@@ -89,7 +89,7 @@ User Input → React Chat UI → FastAPI Backend → LangGraph Agent → LLM (Gr
 ### 1️⃣ Clone Repository
 
 ```
-git clone https://github.com/your-username/ai-crm-hcp-module.git
+git clone https://github.com/pritt18/ai-crm-hcp-module.git
 cd ai-crm-hcp-module
 ```
 
