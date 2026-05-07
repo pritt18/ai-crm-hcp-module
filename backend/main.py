@@ -5,7 +5,7 @@ import json
 
 app = FastAPI()
 
-# ✅ CORS (important)
+# ✅ Enable CORS (important for React frontend)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -14,16 +14,44 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/")
+def home():
+    return {"message": "AI CRM Backend Running"}
+
 @app.post("/chat")
 def chat(data: dict):
-    result = run_agent(data)
-
-    print("LLM RAW OUTPUT:", result)
-
-    # ✅ clean markdown
-    cleaned = result.replace("```json", "").replace("```", "").strip()
-
     try:
-        return json.loads(cleaned)
-    except:
-        return {"error": "Invalid JSON", "raw_output": cleaned}
+        print("\n--- NEW REQUEST ---")
+        print("User Input:", data)
+
+        result = run_agent(data)
+
+        print("RAW AGENT OUTPUT:", result)
+
+        # ✅ If already dict → return directly
+        if isinstance(result, dict):
+            return result
+
+        # ✅ If string → try to parse JSON
+        if isinstance(result, str):
+            cleaned = result.replace("```json", "").replace("```", "").strip()
+            try:
+                return json.loads(cleaned)
+            except:
+                return {
+                    "error": "Invalid JSON from LLM",
+                    "raw_output": cleaned
+                }
+
+        # Fallback
+        return {
+            "error": "Unexpected response format",
+            "raw_output": str(result)
+        }
+
+    except Exception as e:
+        print("SERVER ERROR:", str(e))
+        return {
+            "error": "Server error",
+            "details": str(e)
+        }

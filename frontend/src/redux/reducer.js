@@ -7,7 +7,10 @@ export default function reducer(state = initialState, action) {
     case "UPDATE_FORM":
       return {
         ...state,
-        formData: action.payload
+        formData: {
+          ...state.formData,
+          ...action.payload   // ✅ merge (important)
+        }
       };
     default:
       return state;

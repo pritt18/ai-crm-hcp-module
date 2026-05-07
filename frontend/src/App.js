@@ -1,13 +1,12 @@
+import "./App.css";
 import Form from "./components/Form";
 import Chat from "./components/Chat";
 
-function App() {
+export default function App() {
   return (
-    <div style={{ display: "flex", height: "100vh" }}>
+    <div className="app-container">
       <Form />
       <Chat />
     </div>
   );
 }
-
-export default App;

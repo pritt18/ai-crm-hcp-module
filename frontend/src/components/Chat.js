@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 export default function Chat() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([]);
-  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
   const formData = useSelector((state) => state.formData);
@@ -13,129 +12,110 @@ export default function Chat() {
   const sendMessage = async () => {
     if (!input.trim()) return;
 
-    // Add user message
+    const userText = input;
+
     setMessages((prev) => [
       ...prev,
-      { type: "user", text: input }
+      {
+        sender: "user",
+        text: userText
+      }
     ]);
 
-    setLoading(true);
+    setInput("");
 
     try {
-      const res = await axios.post("http://localhost:8000/chat", {
-        message: input,
-        existing_data: formData
-      });
+      const res = await axios.post(
+        "http://127.0.0.1:8000/chat",
+        {
+          message: userText,
+          existing_data: formData
+        }
+      );
 
-      // Update form
+      console.log("API RESPONSE:", res.data);
+
+      // Update Redux store
       dispatch({
         type: "UPDATE_FORM",
         payload: res.data
       });
 
-      // Add AI response
+      // Format AI response
+      let aiText = "";
+
+      if (res.data.summary) {
+        aiText = `📝 Summary:\n${res.data.summary}`;
+      } else if (res.data.follow_up) {
+        aiText = `📅 Follow-up Actions:\n${res.data.follow_up}`;
+      } else if (res.data.entities) {
+        aiText = `🔍 Extracted Entities:\n${res.data.entities}`;
+      } else {
+        aiText = `
+HCP: ${res.data.hcp_name || ""}
+Interaction: ${res.data.interaction_type || ""}
+Topics: ${res.data.topics || ""}
+Sentiment: ${res.data.sentiment || ""}
+        `;
+      }
+
       setMessages((prev) => [
         ...prev,
         {
-          type: "ai",
-          text: "✔ Interaction logged successfully! The details (HCP Name, Date, Sentiment, and Materials) have been automatically populated. Would you like me to suggest a follow-up action?"
+          sender: "ai",
+          text: aiText
         }
       ]);
 
-      setInput("");
     } catch (error) {
-      console.error("ERROR:", error);
-    }
+      console.error(error);
 
-    setLoading(false);
+      setMessages((prev) => [
+        ...prev,
+        {
+          sender: "ai",
+          text: "❌ Error connecting backend"
+        }
+      ]);
+    }
   };
 
   return (
-    <div
-      style={{
-        width: "35%",
-        height: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        background: "#fff",
-        borderLeft: "1px solid #ddd"
-      }}
-    >
-      {/* Header */}
-      <div style={{ padding: "15px" }}>
-        <h3>🤖 AI Assistant</h3>
-        <p style={{ color: "gray", fontSize: "14px" }}>
-          Log interaction details here via chat
-        </p>
+    <div className="chat-section">
+      <div className="chat-header">
+        🤖 AI Assistant
       </div>
 
-      {/* Messages */}
-      <div
-        style={{
-          flex: 1,
-          overflowY: "auto",
-          padding: "15px"
-        }}
-      >
+      <div className="chat-messages">
         {messages.map((msg, index) => (
           <div
             key={index}
-            style={{
-              marginBottom: "10px",
-              padding: "10px",
-              borderRadius: "8px",
-              background:
-                msg.type === "user" ? "#e0f2fe" : "#dcfce7",
-              textAlign: msg.type === "user" ? "right" : "left"
-            }}
+            className={`message ${
+              msg.sender === "user"
+                ? "user-message"
+                : "ai-message"
+            }`}
           >
             {msg.text}
           </div>
         ))}
-
-        {loading && (
-          <div style={{ color: "gray" }}>
-            AI is thinking...
-          </div>
-        )}
       </div>
 
-      {/* Bottom Input */}
-      <div
-        style={{
-          padding: "10px",
-          borderTop: "1px solid #ddd",
-          display: "flex",
-          gap: "10px",
-          alignItems: "center",
-          background: "#fff"
-        }}
-      >
+      <div className="chat-input-container">
         <input
+          type="text"
+          placeholder="Describe interaction..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Describe interaction..."
-          style={{
-            flex: 1,
-            padding: "12px",
-            borderRadius: "20px",
-            border: "1px solid #ccc"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              sendMessage();
+            }
           }}
         />
 
-        <button
-          onClick={sendMessage}
-          style={{
-            background: "#2563eb",
-            color: "#fff",
-            border: "none",
-            padding: "12px 16px",
-            borderRadius: "50%",
-            cursor: "pointer",
-            fontSize: "16px"
-          }}
-        >
-          ➤
+        <button onClick={sendMessage}>
+          Send
         </button>
       </div>
     </div>
